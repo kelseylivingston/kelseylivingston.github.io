@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Points on a map</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body { margin: 0; padding: 0; }
+      #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id='map'></div>
+    <script>
+    // The value for 'accessToken' begins with 'pk...'
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2Vsc2V5bGl2aW5nc3RvbiIsImEiOiJja3IycWFmcHoxYTc4MnByeGgwZnpjZ2h1In0.RaUBCeoeLI1ZVBEa2Hr90A';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      // Replace YOUR_STYLE_URL with your style URL.
+      style: 'mapbox://styles/kelseylivingston/ckrgvcmev2cu418qdhpsv3pag',
+      center: [-87.661557, 41.893748],
+      zoom: 10.7
+    });
+
+    map.on('click', function(e) {
+      // If the user clicked on one of your markers, get its information.
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['chicago-parks'] // replace with your layer name
+      });
+      if (!features.length) {
+        return;
+      }
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(
+          '<h3>' + feature.properties.title + '</h3>' +
+          '<p>' + feature.properties.description + '</p>'
+          )
+        .addTo(map);
+
+    });
+
+    </script>
+  </body>
+</html>
